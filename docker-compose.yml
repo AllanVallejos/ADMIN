@@ -15,7 +15,6 @@ services:
       - FLASK_ENV=production
     deploy:
       replicas: 2
-    restart: unless-stopped
 
   task-service:
     build: ./task-service
@@ -32,7 +31,6 @@ services:
       - microservices_net
     deploy:
       replicas: 2
-    restart: unless-stopped
 
   nginx-proxy:
     build: ./nginx-proxy
