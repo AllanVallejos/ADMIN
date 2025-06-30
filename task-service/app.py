@@ -32,7 +32,11 @@ def validate_user_exists(user_id):
 def health_check():
     return jsonify({'status': 'healthy'}), 200
 
-@app.route('/tasks', methods=['POST'])
+@app.route('/', methods=['GET'])
+def index():
+    return jsonify({'message': 'Task Service is running'}), 200
+
+@app.route('/tasks', methods=['POST'], strict_slashes=False)
 def create_task():
     data = request.get_json()
     
@@ -57,7 +61,7 @@ def create_task():
     
     return task_schema.jsonify(new_task), 201
 
-@app.route('/tasks', methods=['GET'])
+@app.route('/tasks', methods=['GET'], strict_slashes=False)
 def get_all_tasks():
     user_id = request.args.get('user_id')
     query = Task.query
@@ -68,14 +72,14 @@ def get_all_tasks():
     tasks = query.all()
     return tasks_schema.jsonify(tasks), 200
 
-@app.route('/tasks/<int:id>', methods=['GET'])
+@app.route('/tasks/<int:id>', methods=['GET'], strict_slashes=False)
 def get_task(id):
     task = Task.query.get(id)
     if not task:
         return jsonify({'error': 'Task not found'}), 404
     return task_schema.jsonify(task), 200
 
-@app.route('/tasks/<int:id>', methods=['PUT'])
+@app.route('/tasks/<int:id>', methods=['PUT'], strict_slashes=False)
 def update_task(id):
     task = Task.query.get(id)
     if not task:
