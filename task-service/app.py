@@ -9,7 +9,7 @@ app = Flask(__name__)
 ma = Marshmallow(app)
 init_db(app)
 
-# Configuración
+# Configuracion
 USER_SERVICE_URL = os.getenv('USER_SERVICE_URL', 'http://user-service:5000')
 
 # Esquemas
