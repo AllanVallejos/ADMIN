@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Microservicios Docker</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2980b9;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        h2 {
+            color: var(--dark);
+            margin-top: 0;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 10px;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background-color: var(--light);
+            font-weight: 600;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        .status-up {
+            background-color: rgba(46, 204, 113, 0.15);
+            color: var(--success);
+        }
+        .status-down {
+            background-color: rgba(231, 76, 60, 0.15);
+            color: var(--danger);
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+        .health-check {
+            margin-top: 30px;
+        }
+        .config-code {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .service-info {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .service-box {
+            flex: 1;
+            min-width: 250px;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .last-update {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-top: 20px;
+            text-align: right;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            background-color: var(--light);
+            color: var(--dark);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Panel de Control - Microservicios</h1>
+            <span class="badge">v1.0.0</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Resumen de Servicios</h2>
+            <div class="service-info">
+                <div class="service-box">
+                    <h3>Servicio de Usuarios</h3>
+                    <p><strong>Endpoint:</strong> /api/users</p>
+                    <p><strong>Estado:</strong> <span class="status status-up">Operativo</span></p>
+                    <a href="/api/users/health" class="btn btn-sm">Verificar Estado</a>
+                </div>
+                <div class="service-box">
+                    <h3>Servicio de Tareas</h3>
+                    <p><strong>Endpoint:</strong> /api/tasks</p>
+                    <p><strong>Estado:</strong> <span class="status status-up">Operativo</span></p>
+                    <a href="/api/tasks/health" class="btn btn-sm">Verificar Estado</a>
+                </div>
+                <div class="service-box">
+                    <h3>API Gateway</h3>
+                    <p><strong>Endpoint:</strong> /</p>
+                    <p><strong>Estado:</strong> <span class="status status-up">Operativo</span></p>
+                    <a href="/admin" class="btn btn-sm">Recargar</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Documentación de API</h2>
+            <div class="config-code">
+# User Service
+POST   /api/users       - Registro de usuarios
+  Params: {name, email, password}
+GET    /api/users       - Listar usuarios
+GET    /api/users/{id}  - Detalles de usuario
+GET    /api/users/health - Estado del servicio
+
+# Task Service
+POST   /api/tasks       - Crear tarea
+  Params: {title, description, user_id}
+GET    /api/tasks       - Listar tareas
+GET    /api/tasks/{id}  - Detalles de tarea
+PUT    /api/tasks/{id}  - Actualizar tarea
+GET    /api/tasks?user_id=X - Tareas por usuario
+GET    /api/tasks/health - Estado del servicio
+            </div>
+        </div>
+
+        <div class="card health-check">
+            <h2>Monitor del Sistema</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Componente</th>
+                        <th>Estado</th>
+                        <th>Última Verificación</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>user-service</td>
+                        <td><span class="status status-up">En línea</span></td>
+                        <td id="user-check-time">Hace 2 minutos</td>
+                        <td>
+                            <button onclick="checkService('user')" class="btn btn-sm">Verificar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>task-service</td>
+                        <td><span class="status status-up">En línea</span></td>
+                        <td id="task-check-time">Hace 2 minutos</td>
+                        <td>
+                            <button onclick="checkService('task')" class="btn btn-sm">Verificar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>nginx-proxy</td>
+                        <td><span class="status status-up">En línea</span></td>
+                        <td id="proxy-check-time">Hace 2 minutos</td>
+                        <td>
+                            <button onclick="checkService('proxy')" class="btn btn-sm">Verificar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="last-update" id="last-update">
+                Última actualización completa: <span id="full-check-time">Justo ahora</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkService(service) {
+            const time = new Date().toLocaleTimeString();
+            document.getElementById(`${service}-check-time`).textContent = time;
+            document.getElementById('full-check-time').textContent = time;
+            
+            // Simular respuesta del servicio
+            setTimeout(() => {
+                const statusElement = document.querySelector(`tr:has(#${service}-check-time) .status`);
+                statusElement.className = 'status status-up';
+                statusElement.textContent = 'En línea';
+            }, 500);
+        }
+        
+        function checkAllServices() {
+            ['user', 'task', 'proxy'].forEach(service => {
+                checkService(service);
+            });
+        }
+        
+        // Verificar todos los servicios al cargar la página
+        window.onload = checkAllServices;
+    </script>
+</body>
+</html>
