@@ -17,12 +17,6 @@ services:
     environment:
       - FLASK_ENV=production
       - INSTANCE_ID=1
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
 
   # Segunda instancia del user-service
   user-service-2:
@@ -36,12 +30,6 @@ services:
     environment:
       - FLASK_ENV=production
       - INSTANCE_ID=2
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
 
   # Primera instancia del task-service
   task-service-1:
@@ -59,12 +47,6 @@ services:
       - user-service-2
     networks:
       - microservices_net
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
 
   # Segunda instancia del task-service
   task-service-2:
@@ -82,12 +64,6 @@ services:
       - user-service-2
     networks:
       - microservices_net
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
 
   # Nginx proxy con load balancing
   nginx-proxy:
@@ -106,8 +82,3 @@ services:
     networks:
       - microservices_net
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
